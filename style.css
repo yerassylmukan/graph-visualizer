@@ -38,3 +38,69 @@ body {
   .ace_editor {
     border: 1px solid #ccc;
   } 
+
+  
+  /* Main container */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Layout for graph and control buttons */
+  .graph-section {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  
+  /* Graph card styling */
+  .card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    min-height: 500px;
+  }
+  
+  .card-body {
+    height: 100%;
+  }
+  
+  /* Controls panel on the right */
+  .controls-panel {
+    min-width: 240px;
+    max-width: 300px;
+    background-color: #ffffff;
+    padding-top: 40px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Controls row layout */
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+  }
+  
+  /* Button styling */
+  .controls button {
+    padding: 8px 14px;
+    font-size: 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s;
+  }
+  
+  .controls button:hover {
+    background-color: #0056b3;
+  }
+  
+
+  
