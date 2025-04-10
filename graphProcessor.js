@@ -1,9 +1,21 @@
-let rawNodes = [];
-let edges = [];
+const defaultColor = "#97C2FC";
+let rawNodes = [
+    { id: 0, label: "0", color: defaultColor },
+    { id: 1, label: "1", color: defaultColor },
+    { id: 2, label: "2", color: defaultColor },
+    { id: 3, label: "3", color: defaultColor },
+    { id: 4, label: "4", color: defaultColor }
+];
+
+let rawEdges = [
+    { from: 0, to: 2, arrows: "to" },
+    { from: 2, to: 1, arrows: "to" },
+    { from: 1, to: 0, arrows: "to" },
+    { from: 0, to: 3, arrows: "to" },
+    { from: 3, to: 4, arrows: "to" }
+];
 
 window.addEventListener("DOMContentLoaded", () => {
-    const defaultColor = "#97C2FC";
-  
     const nodeEditor = ace.edit("nodeCountEditor");
     nodeEditor.setTheme("ace/theme/dawn");
     nodeEditor.session.setMode("ace/mode/text");
@@ -27,7 +39,8 @@ window.addEventListener("DOMContentLoaded", () => {
       const lines = graphEditor.getValue().trim().split('\n').filter(line => line.trim() !== '');
       const nodeSet = new Set();
   
-      edges = [];
+      rawNodes = [];
+      rawEdges = [];
       lines.forEach((line, index) => {
         const parts = line.trim().split(/\s+/).map(Number);
   
@@ -37,7 +50,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
   
         const [from, to] = parts;
-        edges.push({ from, to, arrows: "to" });
+        rawEdges.push({ from, to, arrows: "to" });
         nodeSet.add(from);
         nodeSet.add(to);
       });
@@ -60,7 +73,7 @@ window.addEventListener("DOMContentLoaded", () => {
   
       console.clear();
       console.log(rawNodes);
-      console.log(edges);
+      console.log(rawEdges);
     }
   
     graphEditor.session.on('change', processGraphData);
