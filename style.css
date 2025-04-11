@@ -1,106 +1,98 @@
 body {
-    display: flex;
-    height: 100%;
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-    margin: 0;
-    padding: 20px;
-  }
+  display: flex;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 20px;
+}
 
-  .nodeContainer {
-    width: 320px;
-    height: 380px;
-    background: white;
-    border: 1px solid #ccc;
-    padding: 10px;
-    box-sizing: border-box;
-  }
+.nodeContainer {
+  width: 320px;
+  height: 380px;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-sizing: border-box;
+}
 
-  label {
-    font-size: 14px;
-    display: block;
-    margin-top: 10px;
-  }
+label {
+  font-size: 14px;
+  display: block;
+  margin-top: 10px;
+}
 
-  #nodeCountEditor {
-    width: 100%;
-    height: 20px;
-    font-size: 14px;
-  }
+#nodeCountEditor,
+#graphDataEditor {
+  width: 100%;
+  font-size: 14px;
+}
 
-  #graphDataEditor {
-    width: 100%;
-    height: 270px;
-    font-size: 14px;
-    margin-top: 5px;
-  }
+#nodeCountEditor {
+  height: 20px;
+}
 
-  .ace_editor {
-    border: 1px solid #ccc;
-  } 
+#graphDataEditor {
+  height: 270px;
+  margin-top: 5px;
+}
 
-  
-  /* Main container */
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  /* Layout for graph and control buttons */
-  .graph-section {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-    justify-content: space-between;
-  }
-  
-  /* Graph card styling */
-  .card {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    flex: 1;
-    min-height: 500px;
-  }
-  
-  .card-body {
-    height: 100%;
-  }
-  
-  /* Controls panel on the right */
-  .controls-panel {
-    min-width: 240px;
-    max-width: 300px;
-    background-color: #ffffff;
-    padding-top: 40px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Controls row layout */
-  .controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: flex-start;
-  }
-  
-  /* Button styling */
-  .controls button {
-    padding: 8px 14px;
-    font-size: 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background-color 0.2s;
-  }
-  
-  .controls button:hover {
-    background-color: #0056b3;
-  }
-  
+.ace_editor {
+  border: 1px solid #ccc;
+}
 
-  
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.graph-section {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  min-height: 500px;
+}
+
+.card-body {
+  height: 100%;
+}
+
+.controls-panel {
+  min-width: 240px;
+  max-width: 300px;
+  background-color: #ffffff;
+  padding: 40px 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+.controls button {
+  padding: 8px 14px;
+  font-size: 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.controls button:hover {
+  background-color: #0056b3;
+}
