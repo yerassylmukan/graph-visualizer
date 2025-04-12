@@ -5,7 +5,34 @@ const container = document.getElementById("mynetwork");
 const defaultColor = "#97c2fc";
 const visitedColor = "#ffa500";
 const finishedColor = "#999999";
-const sccColors = ["#ff9999", "#99ff99", "#9999ff", "#ffcc99", "#cc99ff"];
+//const sccColors = ["#ff9999", "#99ff99", "#9999ff", "#ffcc99", "#cc99ff"];
+
+function ColorFunction(sccID) {
+  const hue = (sccID * 137) % 360;
+
+  // Convert HSL to RGB
+  function hslToRgb(h, s, l) {
+    s /= 100;
+    l /= 100;
+
+    const k = n => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+    const f = n =>
+      l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+
+    return [
+      Math.round(f(0) * 255),
+      Math.round(f(8) * 255),
+      Math.round(f(4) * 255)
+    ];
+  }
+
+  const [r, g, b] = hslToRgb(hue, 70, 70);
+
+  // Convert RGB to hex string
+  const toHex = x => x.toString(16).padStart(2, '0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+} 
 
 let rawNodes = [], rawEdges = [];
 let shouldPause = false;
@@ -52,15 +79,18 @@ function processGraphData(nodeEditor, graphEditor) {
   });
 
   if (nodeSet.size === 0) {
+    clearGraph();
     nodeEditor.setValue("0", -1);
     console.clear();
     console.log("No valid edges found.");
     return;
   }
 
-  const maxNodeId = Math.max(...nodeSet);
-  rawNodes = Array.from({ length: maxNodeId + 1 }, (_, i) => ({ id: i, label: i.toString(), color: defaultColor }));
-  nodeEditor.setValue((maxNodeId + 1).toString(), -1);
+  //const maxNodeId = Math.max(...nodeSet);
+  //rawNodes = Array.from({ length: maxNodeId + 1 }, (_, i) => ({ id: i, label: i.toString(), color: defaultColor }));
+  rawNodes = Array.from(nodeSet, (_,i) => ({ id: _, label: _.toString(), color: defaultColor }));
+  let len = rawNodes.length;
+  nodeEditor.setValue(len.toString(), -1);
 
   console.clear();
   console.log(rawNodes, rawEdges);
@@ -163,7 +193,7 @@ async function startKosaraju() {
     async function dfs2(id) {
       if (shouldStop || visited2.has(id)) return;
       visited2.add(id);
-      nodes.update({ id, color: sccColors[sccId % sccColors.length] });
+      nodes.update({ id, color: ColorFunction(sccId) });
       await sleep(1000);
 
       for (const neighbor of adj[id]) if (!visited2.has(neighbor)) await dfs2(neighbor);
@@ -186,6 +216,7 @@ async function startKosaraju() {
 
 function transposeGraph() {
   const transposedEdges = edges.get().map(e => ({ from: e.to, to: e.from, arrows: "to" }));
+  edges = new vis.DataSet(transposedEdges);
   network.setData({ nodes, edges: new vis.DataSet(transposedEdges) });
 }
 
@@ -207,10 +238,12 @@ function togglePause() {
   btn.innerText = shouldPause ? "Resume" : "Pause";
   btn.style.backgroundColor = shouldPause ? "green" : "red";
 
-  const controlButtons = ["dfs", "transpose", "draw", "kosaraju", "clear", "reset"];
+  console.log("Pause:" + shouldPause, "Stop:" + shouldStop);
+
+  const controlButtons = ["dfs", "kosaraju","transpose"];
   controlButtons.forEach(id => {
     const button = document.getElementById(id);
-    if (button) button.disabled = shouldPause;
+    if (button) button.disabled = shouldPause || !shouldStop;
   });
 }
 
@@ -230,7 +263,7 @@ async function sleep(ms) {
 }
 
 function disableControls() {
-  document.querySelectorAll(".controls button").forEach(btn => btn.disabled = true);
+  document.querySelectorAll(".controls .startAlgorithm").forEach(btn => btn.disabled = true);
   document.getElementById("pause").disabled = false;
 }
 
