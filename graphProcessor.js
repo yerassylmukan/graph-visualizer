@@ -5,10 +5,9 @@ const container = document.getElementById("mynetwork");
 const defaultColor = "#97c2fc";
 const visitedColor = "#ffa500";
 const finishedColor = "#999999";
-//const sccColors = ["#ff9999", "#99ff99", "#9999ff", "#ffcc99", "#cc99ff"];
 
 function ColorFunction(sccID) {
-  const hue = (sccID * 137) % 360;
+  const hue = (sccID * 137) % 360; //simple hashing for creating new color
 
   // Convert HSL to RGB
   function hslToRgb(h, s, l) {
@@ -79,15 +78,13 @@ function processGraphData(nodeEditor, graphEditor) {
   });
 
   if (nodeSet.size === 0) {
-    clearGraph();
     nodeEditor.setValue("0", -1);
     console.clear();
+    clearGraph();
     console.log("No valid edges found.");
     return;
   }
 
-  //const maxNodeId = Math.max(...nodeSet);
-  //rawNodes = Array.from({ length: maxNodeId + 1 }, (_, i) => ({ id: i, label: i.toString(), color: defaultColor }));
   rawNodes = Array.from(nodeSet, (_,i) => ({ id: _, label: _.toString(), color: defaultColor }));
   let len = rawNodes.length;
   nodeEditor.setValue(len.toString(), -1);
@@ -110,10 +107,24 @@ function drawGraph() {
   };
 
   network = new vis.Network(container, { nodes, edges }, options);
+  network.on("selectNode", updateDFSButtonState);
+  network.on("deselectNode", updateDFSButtonState);
+
+  updateDFSButtonState();
+
   return network;
 }
 
-async function dfsAnimate(startNodeId) {
+async function dfsAnimate() {
+  if (nodes.length === 0) return;
+
+  const selectedNodes = network.getSelectedNodes();
+  if (selectedNodes.length === 0) {
+    alert("Please select a node to start DFS.");
+    return;
+  }
+
+  const startNodeId = selectedNodes[0];
   resetGraph();
   shouldStop = false;
   disableControls();
@@ -144,7 +155,13 @@ async function dfsAnimate(startNodeId) {
   enableControls();
 }
 
+
 async function startKosaraju() {
+
+  if(nodes.length === 0){
+    return;
+  }
+
   resetGraph();
   shouldStop = false;
   disableControls();
@@ -216,18 +233,26 @@ async function startKosaraju() {
 
 function transposeGraph() {
   const transposedEdges = edges.get().map(e => ({ from: e.to, to: e.from, arrows: "to" }));
+  rawEdges = transposedEdges;
   edges = new vis.DataSet(transposedEdges);
   network.setData({ nodes, edges: new vis.DataSet(transposedEdges) });
+
+  updateDFSButtonState();
 }
 
 function clearGraph() {
   shouldStop = true;
+  rawNodes = [];  
   network = new vis.Network(container, {}, {});
+  console.log("Network: " + network);
 }
 
 function resetGraph() {
   shouldStop = true;
-  nodes = new vis.DataSet(JSON.parse(JSON.stringify(rawNodes)));
+  enableControls();
+  updateDFSButtonState();
+  
+  nodes = new vis.DataSet(JSON.parse(JSON.stringify(rawNodes))); //setting the networks data to the original nodes and edges
   edges = new vis.DataSet(JSON.parse(JSON.stringify(rawEdges)));
   network.setData({ nodes, edges });
 }
@@ -236,7 +261,7 @@ function togglePause() {
   shouldPause = !shouldPause;
   const btn = document.getElementById("pause");
   btn.innerText = shouldPause ? "Resume" : "Pause";
-  btn.style.backgroundColor = shouldPause ? "green" : "red";
+  btn.style.backgroundColor = shouldPause ? "green" : "#007bff";
 
   console.log("Pause:" + shouldPause, "Stop:" + shouldStop);
 
@@ -260,6 +285,12 @@ async function sleep(ms) {
   return new Promise((resolve, reject) => {
     setTimeout(() => (shouldStop ? reject(new Error("Stopped")) : resolve()), ms);
   });
+}
+
+function updateDFSButtonState() {
+  const selected = network.getSelectedNodes();
+  const dfsButton = document.getElementById("dfs");
+  dfsButton.disabled = selected.length === 0;
 }
 
 function disableControls() {
